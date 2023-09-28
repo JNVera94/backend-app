@@ -3,7 +3,7 @@ GET  http://localhost:3000/api/alumnos
 
 ### obtener un alumno
 
-GET http://localhost:3000/api/alumnos/7775
+GET http://localhost:3000/api/alumnos/3638
 
 ### crear un nuevo alumno
 
@@ -20,19 +20,20 @@ Content-Type: application/json
 
 ### modificar un alumno (PUT - recurso completo e idempotente)
 
-PUT http://localhost:3000/api/alumnos/78
+PUT http://localhost:3000/api/alumnos/7558
 Content-Type: application/json
 
 {
   "name": "Alejandro",
    "lastname": "Martorell",
    "age": 29,
-    "email":"alemartore@gmail.com"
-}
+    "email":"alemartore@gmail.com",
+    "legajo":"10"
+    }
 
 ### modificar un alumno (PATCH - recurso parcial)
 
-PATCH http://localhost:3000/api/alumnos/985
+PATCH http://localhost:3000/api/alumnos/5144
 Content-Type: application/json
 
 {

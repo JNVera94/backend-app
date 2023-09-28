@@ -6,7 +6,8 @@ const Alumnos = [
       'Julián',
       'Vera',
       29,
-      'julianvera-94@hotmail.com'
+      'julianvera-94@hotmail.com',
+      '10'
     ),
   ];
 
@@ -26,13 +27,26 @@ export class AlumnoRepository implements Repository<Alumno>{
   }
 
   public update(item: Alumno): Alumno | undefined {
-    const alumnoid= Alumnos.findIndex((Alumno)=>Alumno.legajo===item.legajo)
-    if (alumnoid !== -1){
-      Alumnos[alumnoid]={...Alumnos[alumnoid], ...item}
+    // Buscar el alumno por su id utilizando la función findOne
+    const existingAlumno = this.findOne({ id: item.legajo });
+  
+    if (existingAlumno) {
+      // Actualizar el alumno encontrado con los datos proporcionados en 'item'
+      const updatedAlumno = { ...existingAlumno, ...item };
+  
+      // Reemplazar el antiguo alumno con el alumno actualizado en la lista Alumnos
+      const alumnoid = Alumnos.findIndex((Alumno) => Alumno.legajo === item.legajo);
+      if (alumnoid !== -1) {
+        Alumnos[alumnoid] = updatedAlumno;
+      }
+  
+      // Devolver el alumno actualizado
+      return updatedAlumno;
+    } else {
+      // Si no se encontró el alumno, devolver undefined
+      return undefined;
     }
-    return Alumnos[alumnoid]
   }
-
  
    public remove(item: { id: string; }): Alumno | undefined {
     const alumnoid= Alumnos.findIndex((Alumno)=>Alumno.legajo===item.id)

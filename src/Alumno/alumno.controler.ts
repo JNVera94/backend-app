@@ -45,17 +45,26 @@ function add(req: Request,res: Response){
     return res.status(201).send({message:'Alumno created', data: Alumno})
 }
 
-function update(req: Request,res: Response){
-    req.body.sanitizedInput.id=req.params.id
-    const Alumno =repository.update(req.body.sanitizedInput)
-    
-    if(!Alumno){
-        return res.status(404).send({message: 'Alumno Not Found'})
+function update(req: Request, res: Response) {
+    const id = req.params.id;
+    const updatedAlumnoData = req.body.sanitizedInput;
+  
+    const Alumno = repository.findOne({ id });
+  
+    if (!Alumno) {
+      return res.status(404).send({ message: 'Alumno Not Found' });
     }
-   
-   return res.status(200).send({message: 'Alumno modificado exitosamente',data: Alumno})
-}
-
+  
+    const updatedAlumno = { ...Alumno, ...updatedAlumnoData };
+  
+    const updatedResult = repository.update(updatedAlumno);
+  
+    if (!updatedResult) {
+      return res.status(404).send({ message: 'Alumno Not Found' });
+    }
+  
+    return res.status(200).send({ message: 'Alumno modificado exitosamente', data: updatedResult });
+  }
 
 
 function remove(req: Request,res: Response){
