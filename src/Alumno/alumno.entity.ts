@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export class Alumno {
     private static generateRandomLegajo(): string {
       const randomNumber = Math.floor(Math.random() * 10000);
@@ -9,6 +11,7 @@ export class Alumno {
       public lastname: string,
       public age: number,
       public email: string,
-      public legajo: string = Alumno.generateRandomLegajo()
+      public legajo: string = Alumno.generateRandomLegajo(),
+      public _id?: ObjectId
     ) {}
   }
