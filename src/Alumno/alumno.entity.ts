@@ -1,17 +1,39 @@
-import { ObjectId } from "mongodb";
-
-export class Alumno {
-    private static generateRandomLegajo(): string {
-      const randomNumber = Math.floor(Math.random() * 10000);
-      return randomNumber.toString();
-    }
+import {
+  Entity,
+  Property,
+  ManyToMany,
+  Cascade,
+  ManyToOne,
+  Rel,
+  Collection,
+  OneToMany,
   
-    constructor(
-      public name: string,
-      public lastname: string,
-      public age: number,
-      public email: string,
-      public legajo: string = Alumno.generateRandomLegajo(),
-      public _id?: ObjectId
-    ) {}
-  }
+} from '@mikro-orm/core'
+import { Inscripcion } from '../Inscripciones/inscripcion.entity.js'
+import { BaseEntity } from '../shared/db/baseEntity.js'
+
+@Entity()
+export class Alumno extends BaseEntity {
+
+       @Property()
+       name!: string
+
+       @Property()
+       lastname!: string
+
+       @Property()
+       age!: number
+
+       @Property()
+       email!: string
+
+       @ManyToMany(() => Inscripcion, (inscripciones) => inscripciones.alumnos, {
+        
+        owner: true,
+      })
+      inscripciones = new Collection<Inscripcion>(this)
+     
+       
+
+     }
+  

@@ -1,8 +1,9 @@
-import { Request,Response,NextFunction } from "express"
-import {AlumnoRepository} from "./alumno.repository.js"
-import { Alumno } from "./alumno.entity.js"
+import { Request, Response, NextFunction } from 'express'
+import { Alumno } from './alumno.entity.js'
+import { orm } from '../shared/db/orm.js'
 
-const repository = new AlumnoRepository()
+const em = orm.em
+
 
 function sanitizeAlumnoInput(req: Request, res: Response, next: NextFunction){
     req.body.sanitizedInput={
@@ -19,54 +20,66 @@ function sanitizeAlumnoInput(req: Request, res: Response, next: NextFunction){
     next()
 }
 
+
 async function findAll(req: Request,res:Response){
-    res.json({data: await repository.findAll()})
-}
-
-async function findOne(req:Request,res:Response){
-    const id = req.params.id
-    const Alumno = await repository.findOne({id})
-    if(!Alumno){
-     return res.status(404).send({message: 'Alumno Not Found'})
+    try{
+        const alumnos = await em.find(
+            Alumno,{},
+        )
+        res.status(200).json({message: "todos los alumnos encontrados",data: alumnos})
+    }catch(error: any){
+        res.status(500).json({message: error.message})
     }
-    res.json({data: Alumno})
 }
 
-async function add(req: Request,res: Response){
-
-    const input=req.body.sanitizedInput
-    const alumnoInput = new Alumno(input.name,
-        input.lastname,
-        input.age,
-        input.email,
-        input.legajo)
-    
-    const alumno = await repository.add(alumnoInput)
-    return res.status(201).send({message:'Alumno created', data: Alumno})
-}
-
-async function update(req: Request, res: Response) {
-    const Alumno = await repository.update(req.params.id, req.body.sanitizedInput)
-  
-    if (!Alumno) {
-      return res.status(404).send({ message: 'Alumno not found' })
+async function findOne(req: Request, res: Response) {
+    try {
+      const id = req.params.id
+      const oneAlumno = await em.findOneOrFail(
+        Alumno,
+        { id },
+       
+      )
+      res.status(200).json({message: "alumno encontrado",data: oneAlumno})
+    }catch(error: any){
+        res.status(500).json({message: error.message})
     }
-  
-    return res.status(200).send({ message: 'Alumno actualizado correctamente', data: Alumno })
+}
+
+async function add(req: Request, res: Response) {
+    try {
+      const aalumno = em.create(Alumno, req.body.sanitizedInput)
+      await em.flush()
+      res.status(201).json({ message: 'alumno creado', data: aalumno })
+    } catch (error: any) {
+      res.status(500).json({ message: error.message })
+    }
   }
-
-async function remove(req: Request,res: Response){
-    const id = req.params.id
-    const Alumno = await repository.remove({id})
-    
-    if(!Alumno){
-       return res.status(404).send({message:'Alumno not found'})
-    }else{
-    
-    return res.status(200).send({message: 'Alumno borrado exitosamente'})
-
+  
+  async function update(req: Request, res: Response) {
+    try {
+      const id = req.params.id
+      const alumnoupdate = await em.findOneOrFail(Alumno, { id })
+      em.assign(alumnoupdate, req.body.sanitizedInput)
+      await em.flush()
+      res
+        .status(200)
+        .json({ message: 'alumno modificado correctamente', data: alumnoupdate })
+    } catch (error: any) {
+      res.status(500).json({ message: error.message })
     }
-}
+  }
+  
+
+  async function remove(req: Request, res: Response) {
+    try {
+      const id = req.params.id
+      const aalumno = em.getReference(Alumno, id)
+      await em.removeAndFlush(aalumno)
+    } catch (error: any) {
+      res.status(500).json({ message: error.message })
+    }
+  }
 
 
 export{sanitizeAlumnoInput,findAll,findOne,add,update,remove}

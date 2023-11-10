@@ -1,5 +1,5 @@
 ### obtener todos los alumnos
-GET  http://localhost:3000/api/
+GET  http://localhost:3000/api/materia/
 
 ### obtener un alumno
 
@@ -7,15 +7,16 @@ GET http://localhost:3000/api/alumnos/652066fc98b3d51e34b0c41b
 
 ### crear un nuevo alumno
 
-POST http://localhost:3000/api/alumnos
+POST http://localhost:3000/api/materia/
 Content-Type: application/json
 
 
 {
-  "name": "Julian",
-   "lastname": "Vera",
-   "age": 29,
-    "email":"julianvera3005@gmail.com"
+  "name": "1131331sadad",
+   "totalhours": "300001",
+   "email": "@gmail.com",
+    "nivel":"3",
+    "desc": "asdaddd3dd"
 }
 
 ### modificar un alumno (PUT - recurso completo e idempotente)

@@ -1,0 +1,8 @@
+POST http://localhost:3000/api/inscripcion//
+Content-Type: application/json
+
+
+{
+"alumnos":"654ac640d52d559f4a35fc85",
+"materias":"654ac673d52d559f4a35fc86"
+}

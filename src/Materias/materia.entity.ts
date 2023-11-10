@@ -1,13 +1,43 @@
-import { ObjectId } from "mongodb";
-
-export class Materia {
- 
+import {
+  Entity,
+  Property,
+  ManyToMany,
+  Cascade,
+  ManyToOne,
+  Rel,
+  Collection,
+  OneToMany
   
-    constructor(
-      public name: string,
-      public totalhours: number,
-      public email: string,
-      public nivel: string,
-      public _id?: ObjectId
-    ) {}
-  }
+} from '@mikro-orm/core'
+import { BaseEntity } from '../shared/db/baseEntity.js'
+import { Inscripcion } from '../Inscripciones/inscripcion.entity.js'
+import { ObjectId } from '@mikro-orm/mongodb'
+
+@Entity()
+export class Materia extends BaseEntity {
+
+       @Property()
+       name!: string
+
+       @Property()
+       totalhours!: number
+
+       @Property()
+       email!: string
+
+       @Property()
+       nivel!: number
+
+       @Property()
+       desc!: string
+       
+       @ManyToMany(() => Inscripcion, (inscripciones) => inscripciones.materias, {
+        
+        owner: true,
+      })
+      inscripciones = new Collection<Inscripcion>(this)
+
+
+     }
+  
+

@@ -1,15 +1,17 @@
-import { Request,Response,NextFunction } from "express"
-import {MateriaRepository} from "./materia.repository.js"
-import { Materia } from "./materia.entity.js"
+import { Request, Response, NextFunction } from 'express'
+import { Materia } from './materia.entity.js'
+import { orm } from '../shared/db/orm.js'
 
-const repository = new MateriaRepository()
+const em = orm.em
+
 
 function sanitizeMateriaInput(req: Request, res: Response, next: NextFunction){
     req.body.sanitizedInput={
         name: req.body.name,
         totalhours: req.body.totalhours,
         email: req.body.email,
-        nivel: req.body.nivel
+        nivel: req.body.nivel,
+        desc: req.body.desc,
     }
     Object.keys(req.body.sanitizedInput).forEach(key=>{
         if(req.body.sanitizedInput[key]===undefined){
@@ -19,53 +21,66 @@ function sanitizeMateriaInput(req: Request, res: Response, next: NextFunction){
     next()
 }
 
+
 async function findAll(req: Request,res:Response){
-    res.json({data: await repository.findAll()})
-}
-
-async function findOne(req:Request,res:Response){
-    const id = req.params.id
-    const Materia = await repository.findOne({id})
-    if(!Materia){
-     return res.status(404).send({message: 'Materia Not Found'})
+    try{
+        const materias = await em.find(
+            Materia,{},
+        )
+        res.status(200).json({message: "todas las materias encontradas",data: materias})
+    }catch(error: any){
+        res.status(500).json({message: error.message})
     }
-    res.json({data: Materia})
 }
 
-async function add(req: Request,res: Response){
-
-    const input=req.body.sanitizedInput
-    const materiaInput = new Materia(input.name,
-        input.totalhours,
-        input.email,
-        input.nivel)
-    
-    const materia = await repository.add(materiaInput)
-    return res.status(201).send({message:'Materia created', data: Materia})
-}
-async function update(req: Request, res: Response) {
-    const Materia = await repository.update(req.params.id, req.body.sanitizedInput)
-  
-    if (!Materia) {
-      return res.status(404).send({ message: 'Materia not found' })
+async function findOne(req: Request, res: Response) {
+    try {
+      const id = req.params.id
+      const oneMateria = await em.findOneOrFail(
+        Materia,
+        { id },
+       
+      )
+      res.status(200).json({message: "materia encontrada",data: oneMateria})
+    }catch(error: any){
+        res.status(500).json({message: error.message})
     }
-  
-    return res.status(200).send({ message: 'Materia actualizada correctamente', data: Materia })
+}
+
+async function add(req: Request, res: Response) {
+    try {
+      const amateria = em.create(Materia, req.body.sanitizedInput)
+      await em.flush()
+      res.status(201).json({ message: 'materia creada', data: amateria })
+    } catch (error: any) {
+      res.status(500).json({ message: error.message })
+    }
   }
-
-
-async function remove(req: Request,res: Response){
-    const id = req.params.id
-    const Materia = await repository.remove({id})
-    
-    if(!Materia){
-       return res.status(404).send({message:'Materia not found'})
-    }else{
-    
-    return res.status(200).send({message: 'Materia borrada exitosamente'})
-
+  
+  async function update(req: Request, res: Response) {
+    try {
+      const id = req.params.id
+      const materiaupdate = await em.findOneOrFail(Materia, { id })
+      em.assign(materiaupdate, req.body.sanitizedInput)
+      await em.flush()
+      res
+        .status(200)
+        .json({ message: 'materia modificada', data: materiaupdate })
+    } catch (error: any) {
+      res.status(500).json({ message: error.message })
     }
-}
+  }
+  
+
+  async function remove(req: Request, res: Response) {
+    try {
+      const id = req.params.id
+      const amateria = em.getReference(Materia, id)
+      await em.removeAndFlush(amateria)
+    } catch (error: any) {
+      res.status(500).json({ message: error.message })
+    }
+  }
 
 
 export{sanitizeMateriaInput,findAll,findOne,add,update,remove}
