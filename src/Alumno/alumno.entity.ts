@@ -9,6 +9,7 @@ import {
   OneToMany,
   
 } from '@mikro-orm/core'
+import { Exclude } from 'class-transformer';
 import { Inscripcion } from '../Inscripciones/inscripcion.entity.js'
 import { BaseEntity } from '../shared/db/baseEntity.js'
 
@@ -26,6 +27,9 @@ export class Alumno extends BaseEntity {
 
        @Property()
        email!: string
+
+       @Exclude()
+       password!: string
 
        @ManyToMany(() => Inscripcion, (inscripciones) => inscripciones.alumnos, {
         

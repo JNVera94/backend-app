@@ -1,5 +1,6 @@
 import { Alumno } from './alumno.entity.js';
 import { orm } from '../shared/db/orm.js';
+import { User } from '../User/user.entity.js';
 const em = orm.em;
 function sanitizeAlumnoInput(req, res, next) {
     req.body.sanitizedInput = {
@@ -7,6 +8,7 @@ function sanitizeAlumnoInput(req, res, next) {
         lastname: req.body.lastname,
         age: req.body.age,
         email: req.body.email,
+        password: req.body.password,
     };
     Object.keys(req.body.sanitizedInput).forEach(key => {
         if (req.body.sanitizedInput[key] === undefined) {
@@ -36,9 +38,17 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const aalumno = em.create(Alumno, req.body.sanitizedInput);
+        const user = em.create(User, {
+            email: req.body.email,
+            password: req.body.password,
+        });
+        await user.hashPassword();
+        const alumno = em.create(Alumno, {
+            ...req.body.sanitizedInput,
+            user: user,
+        });
         await em.flush();
-        res.status(201).json({ message: 'alumno creado', data: aalumno });
+        res.status(201).json({ message: 'alumno creado', data: alumno, user });
     }
     catch (error) {
         res.status(500).json({ message: error.message });

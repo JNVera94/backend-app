@@ -8,6 +8,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Entity, Property, ManyToMany, Collection, } from '@mikro-orm/core';
+import { Exclude } from 'class-transformer';
 import { Inscripcion } from '../Inscripciones/inscripcion.entity.js';
 import { BaseEntity } from '../shared/db/baseEntity.js';
 let Alumno = class Alumno extends BaseEntity {
@@ -32,6 +33,10 @@ __decorate([
     Property(),
     __metadata("design:type", String)
 ], Alumno.prototype, "email", void 0);
+__decorate([
+    Exclude(),
+    __metadata("design:type", String)
+], Alumno.prototype, "password", void 0);
 __decorate([
     ManyToMany(() => Inscripcion, (inscripciones) => inscripciones.alumnos, {
         owner: true,
