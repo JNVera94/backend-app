@@ -1,8 +1,9 @@
-POST http://localhost:3000/api/inscripcion//
+POST http://localhost:3000/api/inscripcion/
 Content-Type: application/json
 
 
 {
-"alumnos":"654ac640d52d559f4a35fc85",
-"materias":"654ac673d52d559f4a35fc86"
+"alumnoId":"655e535c4117f4b0afc821ff",
+"materiaId":"654bd4d101fbcb278b490d87",
+"fechaHoraInscripcion": "2023-11-22T19:17:42.683Z"
 }

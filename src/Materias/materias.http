@@ -12,11 +12,11 @@ Content-Type: application/json
 
 
 {
-  "name": "1131331sadad",
-   "totalhours": "300001",
-   "email": "@gmail.com",
-    "nivel":"3",
-    "desc": "asdaddd3dd"
+  "name": "Informatica Juridica",
+   "totalhours": "85",
+   "email": "IJ@gmail.com",
+    "nivel":"1",
+    "desc": "Explora el fascinante campo de la Informática Jurídica, donde la tecnología se fusiona con el ámbito legal. En esta materia, se abordan las intersecciones entre la informática y el sistema jurídico, examinando cómo las herramientas tecnológicas pueden potenciar la eficiencia en la gestión legal, análisis de datos forenses, y el acceso a la información legal. A lo largo del curso, se exploran conceptos clave como la ciberseguridad legal, la gestión de bases de datos jurídicas, y la aplicación de inteligencia artificial en el análisis de casos legales. Este viaje proporciona una comprensión profunda de cómo la informática juega un papel crucial en la evolución y modernización del ámbito legal."
 }
 
 ### modificar un alumno (PUT - recurso completo e idempotente)

@@ -31,12 +31,8 @@ export class Materia extends BaseEntity {
        @Property()
        desc!: string
        
-       @ManyToMany(() => Inscripcion, (inscripciones) => inscripciones.materias, {
-        
-        owner: true,
-      })
-      inscripciones = new Collection<Inscripcion>(this)
-
+       @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.materia)
+       inscripciones = new Collection<Inscripcion>(this);
 
      }
   

@@ -7,6 +7,8 @@ import {
   Rel,
   Collection,
   OneToMany,
+  Unique,
+  
   
 } from '@mikro-orm/core'
 import { Exclude } from 'class-transformer';
@@ -26,17 +28,14 @@ export class Alumno extends BaseEntity {
        age!: number
 
        @Property()
+       @Unique()
        email!: string
 
        @Exclude()
        password!: string
 
-       @ManyToMany(() => Inscripcion, (inscripciones) => inscripciones.alumnos, {
-        
-        owner: true,
-      })
-      inscripciones = new Collection<Inscripcion>(this)
-     
+       @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.alumno)
+       inscripciones = new Collection<Inscripcion>(this);
        
 
      }

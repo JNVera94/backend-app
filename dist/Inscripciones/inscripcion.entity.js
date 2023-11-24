@@ -7,25 +7,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, ManyToMany, Collection } from '@mikro-orm/core';
+import { Entity, Property, ManyToOne } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.js';
 import { Alumno } from '../Alumno/alumno.entity.js';
 import { Materia } from '../Materias/materia.entity.js';
 let Inscripcion = class Inscripcion extends BaseEntity {
-    constructor() {
-        super(...arguments);
-        this.alumnos = new Collection(this);
-        this.materias = new Collection(this);
-    }
 };
 __decorate([
-    ManyToMany(() => Alumno, (alumnos) => alumnos.inscripciones),
+    ManyToOne(() => Alumno),
     __metadata("design:type", Object)
-], Inscripcion.prototype, "alumnos", void 0);
+], Inscripcion.prototype, "alumno", void 0);
 __decorate([
-    ManyToMany(() => Materia, (materias) => materias.inscripciones),
+    ManyToOne(() => Materia),
     __metadata("design:type", Object)
-], Inscripcion.prototype, "materias", void 0);
+], Inscripcion.prototype, "materia", void 0);
+__decorate([
+    Property({ type: 'date' }),
+    __metadata("design:type", Object)
+], Inscripcion.prototype, "fechaInscripcion", void 0);
 Inscripcion = __decorate([
     Entity()
 ], Inscripcion);

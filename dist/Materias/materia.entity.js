@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Property, ManyToMany, Collection } from '@mikro-orm/core';
+import { Entity, Property, Collection, OneToMany } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.js';
 import { Inscripcion } from '../Inscripciones/inscripcion.entity.js';
 let Materia = class Materia extends BaseEntity {
@@ -37,9 +37,7 @@ __decorate([
     __metadata("design:type", String)
 ], Materia.prototype, "desc", void 0);
 __decorate([
-    ManyToMany(() => Inscripcion, (inscripciones) => inscripciones.materias, {
-        owner: true,
-    }),
+    OneToMany(() => Inscripcion, (inscripcion) => inscripcion.materia),
     __metadata("design:type", Object)
 ], Materia.prototype, "inscripciones", void 0);
 Materia = __decorate([

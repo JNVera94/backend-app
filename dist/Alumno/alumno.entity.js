@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Property, ManyToMany, Collection, } from '@mikro-orm/core';
+import { Entity, Property, Collection, OneToMany, Unique, } from '@mikro-orm/core';
 import { Exclude } from 'class-transformer';
 import { Inscripcion } from '../Inscripciones/inscripcion.entity.js';
 import { BaseEntity } from '../shared/db/baseEntity.js';
@@ -31,6 +31,7 @@ __decorate([
 ], Alumno.prototype, "age", void 0);
 __decorate([
     Property(),
+    Unique(),
     __metadata("design:type", String)
 ], Alumno.prototype, "email", void 0);
 __decorate([
@@ -38,9 +39,7 @@ __decorate([
     __metadata("design:type", String)
 ], Alumno.prototype, "password", void 0);
 __decorate([
-    ManyToMany(() => Inscripcion, (inscripciones) => inscripciones.alumnos, {
-        owner: true,
-    }),
+    OneToMany(() => Inscripcion, (inscripcion) => inscripcion.alumno),
     __metadata("design:type", Object)
 ], Alumno.prototype, "inscripciones", void 0);
 Alumno = __decorate([

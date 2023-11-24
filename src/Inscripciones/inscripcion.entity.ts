@@ -1,14 +1,10 @@
 import {
   Entity,
   Property,
-  ManyToMany,
-  Cascade,
   ManyToOne,
-  Rel,
-  Collection,
-  OneToMany
-  
+  Rel
 } from '@mikro-orm/core'
+
 import { BaseEntity } from '../shared/db/baseEntity.js'
 import { Alumno } from '../Alumno/alumno.entity.js'
 import { Materia } from '../Materias/materia.entity.js'
@@ -16,12 +12,12 @@ import { Materia } from '../Materias/materia.entity.js'
 @Entity()
 export class Inscripcion extends BaseEntity {
 
-  @ManyToMany(() => Alumno, (alumnos) => alumnos.inscripciones)
-  alumnos = new Collection<Alumno>(this)
+  @ManyToOne(() => Alumno)
+  alumno!: Rel<Alumno>;
+  
+  @ManyToOne(() => Materia)
+  materia!: Rel<Materia>;
 
-  @ManyToMany(() => Materia, (materias) => materias.inscripciones)
-  materias = new Collection<Materia>(this)
-
- 
-
+  @Property({ type: 'date' })
+  fechaInscripcion: Date | undefined;
 }
