@@ -32,8 +32,13 @@ async function findAll(req, res) {
 async function findOne(req, res) {
     try {
         const email = req.params.email;
-        const oneAlumno = await em.findOneOrFail(Alumno, { email });
-        res.status(200).json({ message: "alumno encontrado", data: oneAlumno });
+        const oneAlumno = await em.findOne(Alumno, { email });
+        if (oneAlumno) {
+            res.status(200).json({ message: "Alumno encontrado", data: oneAlumno });
+        }
+        else {
+            res.status(404).json({ message: "Alumno no encontrado", data: null });
+        }
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -49,9 +54,27 @@ async function findOneId(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-async function add(req, res) {
-    console.log('aver 4');
+async function checkEmailExists(req, res, next) {
     try {
+        const email = req.body.sanitizedInput.email;
+        const existingAlumno = await em.findOne(User, { email });
+        if (existingAlumno) {
+            return res.status(400).json({ message: 'El email ya está registrado', data: null });
+        }
+        next();
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+async function add(req, res) {
+    try {
+        // Verificar si el email ya está registrado
+        const emailExistsResponse = await em.findOne(User, { email: req.body.sanitizedInput.email });
+        console.log(emailExistsResponse);
+        if (emailExistsResponse) {
+            return res.status(400).json({ message: 'El email ya está registrado', data: null });
+        }
         const user = em.create(User, {
             email: req.body.email,
             password: req.body.password,
@@ -99,5 +122,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { sanitizeAlumnoInput, findAll, findOne, findOneId, add, update, remove };
+export { sanitizeAlumnoInput, findAll, findOne, findOneId, checkEmailExists, add, update, remove };
 //# sourceMappingURL=alumno.controler.js.map

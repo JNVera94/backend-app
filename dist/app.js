@@ -1,10 +1,11 @@
 import 'reflect-metadata';
 import Express from 'express';
 import { orm } from './shared/db/orm.js';
-import { AlumnoRouter } from './Alumno/alumno.routes.js';
 import cors from 'cors';
-import { MateriaRouter } from './Materias/materiasroutes.js';
 import { RequestContext } from '@mikro-orm/core';
+import { ContactoRouter } from './Contacto/contactoroutes.js';
+import { MateriaRouter } from './Materias/materiasroutes.js';
+import { AlumnoRouter } from './Alumno/alumno.routes.js';
 import { InscripcionRouter } from './Inscripciones/inscripcion.routes.js';
 import { AuthRouter } from './User/user.routes.js';
 const app = Express();
@@ -13,6 +14,7 @@ app.use(cors());
 app.use((req, res, next) => {
     RequestContext.create(orm.em, next);
 });
+app.use('/api/contacto', ContactoRouter);
 app.use('/api/alumnos', AlumnoRouter);
 app.use('/api/inscripcion', InscripcionRouter);
 app.use('/api/materia', MateriaRouter);
