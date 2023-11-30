@@ -15,13 +15,13 @@ function sanitizeAlumnoInput(req: Request, res: Response, next: NextFunction) {
     email: req.body.email,
     password: req.body.password,
   }
-  console.log('a ver 2')
+
   Object.keys(req.body.sanitizedInput).forEach(key => {
     if (req.body.sanitizedInput[key] === undefined) {
       delete req.body.sanitizedInput[key]
     }
   })
-  console.log('a ver 3')
+
   next()
 }
 
@@ -86,9 +86,9 @@ async function checkEmailExists(req: Request, res: Response, next: NextFunction)
 
 async function add(req: Request, res: Response) {
   try {
-    // Verificar si el email ya está registrado
+   
     const emailExistsResponse = await em.findOne(User, { email: req.body.sanitizedInput.email });
-    console.log(emailExistsResponse)
+    
     if (emailExistsResponse) {
       return res.status(400).json({ message: 'El email ya está registrado', data: null });
     }
@@ -98,7 +98,7 @@ async function add(req: Request, res: Response) {
       password: req.body.password,
 
     });
-    console.log('a ver 5')
+   
     await user.hashPassword();
 
     const alumno = em.create(Alumno, {

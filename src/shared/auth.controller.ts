@@ -19,8 +19,6 @@ export async function authenticate(req: Request, res: Response) {
     return res.status(401).json({ message: 'Invalid password' });
   }
 
-
-  // Generate a token
   const token = jwt.sign({ userId: user.id }, 'secreto', { expiresIn: '1h' });
 
   console.log(`User ${user.email} logged in successfully.`);

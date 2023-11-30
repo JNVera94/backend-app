@@ -12,7 +12,6 @@ export async function authenticate(req, res) {
     if (!(await user.comparePassword(password))) {
         return res.status(401).json({ message: 'Invalid password' });
     }
-    // Generate a token
     const token = jwt.sign({ userId: user.id }, 'secreto', { expiresIn: '1h' });
     console.log(`User ${user.email} logged in successfully.`);
     res.json({ token });
