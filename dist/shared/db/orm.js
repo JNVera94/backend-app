@@ -9,8 +9,4 @@ export const orm = await MikroORM.init({
     highlighter: new MongoHighlighter(),
     debug: true,
 });
-/*export const syncSchema =async () => {
-    const generator = orm.getSchemaGenerator()
-    await generator.updateSchema()
-}*/
 //# sourceMappingURL=orm.js.map

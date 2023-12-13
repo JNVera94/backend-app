@@ -12,18 +12,6 @@ import { ObjectId } from '@mikro-orm/mongodb';
 export class BaseEntity {
     constructor() {
         this._id = new ObjectId();
-        /*
-      
-        @Property({ type: DateTimeType })
-        createdAt? = new Date()
-      
-        @Property({
-          type: DateTimeType,
-          onUpdate: () => new Date(),
-        })
-        updatedAt? = new Date()
-      
-        */
     }
 }
 __decorate([

@@ -7,7 +7,6 @@ const em = orm.em
 
 
 function sanitizeAlumnoInput(req: Request, res: Response, next: NextFunction) {
-  console.log('a ver')
   req.body.sanitizedInput = {
     name: req.body.name,
     lastname: req.body.lastname,
@@ -96,7 +95,6 @@ async function add(req: Request, res: Response) {
     const user = em.create(User, {
       email: req.body.email,
       password: req.body.password,
-
     });
    
     await user.hashPassword();
@@ -107,9 +105,6 @@ async function add(req: Request, res: Response) {
     });
 
     await em.flush();
-
-
-
     res.status(201).json({ message: 'alumno creado', data: alumno, user });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -132,7 +127,6 @@ async function update(req: Request, res: Response) {
 
 
 async function remove(req: Request, res: Response) {
-
   try {
     const id = req.params.id
     const aalumno = await em.findOneOrFail(Alumno, { id })
@@ -151,6 +145,5 @@ async function remove(req: Request, res: Response) {
     res.status(500).json({ message: error.message })
   }
 }
-
 
 export { sanitizeAlumnoInput, findAll, findOne, findOneId, checkEmailExists, add, update, remove }

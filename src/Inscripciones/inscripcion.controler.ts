@@ -12,7 +12,6 @@ function sanitizeInscripcionInput(req: Request, res: Response, next: NextFunctio
   if (!alumnoId || !materiaId) {
     return res.status(400).json({ message: 'Debe proporcionar alumnoId y materiaId para la inscripción' });
   }
-  console.log('validacion 1')
   req.body.sanitizedInput = {
     alumnoId: req.body.alumnoId,
     materiaId: req.body.materiaId,
@@ -57,7 +56,6 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
-  console.log('entro al add')
   try {
     const { alumnoId, materiaId, fechaInscripcion } = req.body;
     console.log(`Alumno ID: ${alumnoId}, Materia ID: ${materiaId}, Fecha Inscripción: ${fechaInscripcion}`);
@@ -108,15 +106,12 @@ async function add(req: Request, res: Response) {
   async function findByAlumnoId(req: Request, res: Response) {
     try {
       const idAlumno = req.params.idAlumno;
-      console.log(idAlumno)
       const inscripciones = await em.find(Inscripcion, { alumno: idAlumno });
-  
       res.status(200).json({ message: "Inscripciones encontradas para el alumno", data: inscripciones });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
   }
   
-
 
 export{sanitizeInscripcionInput,findAll,findOne,add,update,remove,findByAlumnoId}

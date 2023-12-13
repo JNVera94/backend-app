@@ -3,7 +3,6 @@ import { orm } from '../shared/db/orm.js';
 import { User } from '../User/user.entity.js';
 const em = orm.em;
 function sanitizeAlumnoInput(req, res, next) {
-    console.log('a ver');
     req.body.sanitizedInput = {
         name: req.body.name,
         lastname: req.body.lastname,

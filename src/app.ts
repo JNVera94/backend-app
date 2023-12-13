@@ -1,4 +1,7 @@
 import 'reflect-metadata'
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 import  Express from 'express'
 import { orm } from './shared/db/orm.js';
 import cors from 'cors';

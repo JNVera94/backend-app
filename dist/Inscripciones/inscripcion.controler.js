@@ -6,7 +6,6 @@ function sanitizeInscripcionInput(req, res, next) {
     if (!alumnoId || !materiaId) {
         return res.status(400).json({ message: 'Debe proporcionar alumnoId y materiaId para la inscripción' });
     }
-    console.log('validacion 1');
     req.body.sanitizedInput = {
         alumnoId: req.body.alumnoId,
         materiaId: req.body.materiaId,
@@ -39,7 +38,6 @@ async function findOne(req, res) {
     }
 }
 async function add(req, res) {
-    console.log('entro al add');
     try {
         const { alumnoId, materiaId, fechaInscripcion } = req.body;
         console.log(`Alumno ID: ${alumnoId}, Materia ID: ${materiaId}, Fecha Inscripción: ${fechaInscripcion}`);
@@ -86,7 +84,6 @@ async function remove(req, res) {
 async function findByAlumnoId(req, res) {
     try {
         const idAlumno = req.params.idAlumno;
-        console.log(idAlumno);
         const inscripciones = await em.find(Inscripcion, { alumno: idAlumno });
         res.status(200).json({ message: "Inscripciones encontradas para el alumno", data: inscripciones });
     }

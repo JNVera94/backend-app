@@ -13,8 +13,5 @@ export const orm = await MikroORM.init<MongoDriver>({
 
 })
 
-/*export const syncSchema =async () => {
-    const generator = orm.getSchemaGenerator()
-    await generator.updateSchema()
-}*/
+
 
