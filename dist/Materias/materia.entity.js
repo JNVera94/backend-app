@@ -37,6 +37,10 @@ __decorate([
     __metadata("design:type", String)
 ], Materia.prototype, "desc", void 0);
 __decorate([
+    Property(),
+    __metadata("design:type", String)
+], Materia.prototype, "icono", void 0);
+__decorate([
     OneToMany(() => Inscripcion, (inscripcion) => inscripcion.materia),
     __metadata("design:type", Object)
 ], Materia.prototype, "inscripciones", void 0);

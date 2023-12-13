@@ -8,6 +8,7 @@ function sanitizeMateriaInput(req, res, next) {
         email: req.body.email,
         nivel: req.body.nivel,
         desc: req.body.desc,
+        icono: req.body.icono,
     };
     Object.keys(req.body.sanitizedInput).forEach(key => {
         if (req.body.sanitizedInput[key] === undefined) {
