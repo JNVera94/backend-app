@@ -16,15 +16,15 @@ let Inscripcion = class Inscripcion extends BaseEntity {
 __decorate([
     ManyToOne(() => Alumno),
     __metadata("design:type", Object)
-], Inscripcion.prototype, "alumno", void 0);
+], Inscripcion.prototype, "student", void 0);
 __decorate([
     ManyToOne(() => Materia),
     __metadata("design:type", Object)
-], Inscripcion.prototype, "materia", void 0);
+], Inscripcion.prototype, "course", void 0);
 __decorate([
     Property({ type: 'date' }),
     __metadata("design:type", Object)
-], Inscripcion.prototype, "fechaInscripcion", void 0);
+], Inscripcion.prototype, "inscription_date", void 0);
 Inscripcion = __decorate([
     Entity()
 ], Inscripcion);

@@ -34,7 +34,7 @@ export class Alumno extends BaseEntity {
        @Exclude()
        password!: string
 
-       @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.alumno)
+       @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.student)
        inscripciones = new Collection<Inscripcion>(this);
        
 

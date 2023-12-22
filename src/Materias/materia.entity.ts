@@ -1,10 +1,6 @@
 import {
   Entity,
   Property,
-  ManyToMany,
-  Cascade,
-  ManyToOne,
-  Rel,
   Collection,
   OneToMany
   
@@ -26,15 +22,15 @@ export class Materia extends BaseEntity {
        email!: string
 
        @Property()
-       nivel!: number
+       level!: number
 
        @Property()
        desc!: string
 
        @Property()
-       icono!: string
+       icon!: string
        
-       @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.materia)
+       @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.course)
        inscripciones = new Collection<Inscripcion>(this);
 
      }

@@ -31,7 +31,7 @@ __decorate([
 __decorate([
     Property(),
     __metadata("design:type", Number)
-], Materia.prototype, "nivel", void 0);
+], Materia.prototype, "level", void 0);
 __decorate([
     Property(),
     __metadata("design:type", String)
@@ -39,9 +39,9 @@ __decorate([
 __decorate([
     Property(),
     __metadata("design:type", String)
-], Materia.prototype, "icono", void 0);
+], Materia.prototype, "icon", void 0);
 __decorate([
-    OneToMany(() => Inscripcion, (inscripcion) => inscripcion.materia),
+    OneToMany(() => Inscripcion, (inscripcion) => inscripcion.course),
     __metadata("design:type", Object)
 ], Materia.prototype, "inscripciones", void 0);
 Materia = __decorate([

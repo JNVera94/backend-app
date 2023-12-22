@@ -39,7 +39,7 @@ __decorate([
     __metadata("design:type", String)
 ], Alumno.prototype, "password", void 0);
 __decorate([
-    OneToMany(() => Inscripcion, (inscripcion) => inscripcion.alumno),
+    OneToMany(() => Inscripcion, (inscripcion) => inscripcion.student),
     __metadata("design:type", Object)
 ], Alumno.prototype, "inscripciones", void 0);
 Alumno = __decorate([

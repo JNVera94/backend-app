@@ -7,15 +7,15 @@ const em = orm.em
 
 
 function sanitizeInscripcionInput(req: Request, res: Response, next: NextFunction) {
-  const { alumnoId, materiaId, fechaInscripcion } = req.body;
+  const { student_id, course_id, inscription_date } = req.body;
 
-  if (!alumnoId || !materiaId) {
-    return res.status(400).json({ message: 'Debe proporcionar alumnoId y materiaId para la inscripción' });
+  if (!student_id || !course_id) {
+    return res.status(400).json({ message: 'Debe proporcionar student_id y course_id para la inscripción' });
   }
   req.body.sanitizedInput = {
-    alumnoId: req.body.alumnoId,
-    materiaId: req.body.materiaId,
-    fechaInscripcion: req.body.fechaInscripcion || new Date(),
+    student_id: req.body.student_id,
+    course_id: req.body.course_id,
+    inscription_date: req.body.inscription_date || new Date(),
   };
 
   Object.keys(req.body.sanitizedInput).forEach(key=>{
@@ -57,15 +57,15 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const { alumnoId, materiaId, fechaInscripcion } = req.body;
-    console.log(`Alumno ID: ${alumnoId}, Materia ID: ${materiaId}, Fecha Inscripción: ${fechaInscripcion}`);
-    const alumno = await em.findOneOrFail('Alumno', { id: alumnoId });
-    const materia = await em.findOneOrFail('Materia', { id: materiaId });
+    const { student_id, course_id, inscription_date } = req.body;
+    console.log(`Alumno ID: ${student_id}, Materia ID: ${course_id}, Fecha Inscripción: ${inscription_date}`);
+    const student = await em.findOneOrFail('Alumno', { id: student_id });
+    const course = await em.findOneOrFail('Materia', { id: course_id });
 
     const inscripcion = em.create(Inscripcion, {
-      alumno: alumno,
-      materia: materia,
-      fechaInscripcion: fechaInscripcion || new Date(),
+      student: student,
+      course: course,
+      inscription_date: inscription_date || new Date(),
     });
 
     await em.persistAndFlush(inscripcion);
@@ -103,15 +103,15 @@ async function add(req: Request, res: Response) {
     }
   }
 
-  async function findByAlumnoId(req: Request, res: Response) {
+  async function findByStudentId(req: Request, res: Response) {
     try {
-      const idAlumno = req.params.idAlumno;
-      const inscripciones = await em.find(Inscripcion, { alumno: idAlumno });
-      res.status(200).json({ message: "Inscripciones encontradas para el alumno", data: inscripciones });
+      const idStudent = req.params.idStudent;
+      const inscriptions = await em.find(Inscripcion, { student: idStudent });
+      res.status(200).json({ message: "Inscripciones encontradas para el alumno", data: inscriptions });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
   }
   
 
-export{sanitizeInscripcionInput,findAll,findOne,add,update,remove,findByAlumnoId}
+export{sanitizeInscripcionInput,findAll,findOne,add,update,remove,findByStudentId}

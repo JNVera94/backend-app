@@ -13,11 +13,11 @@ import { Materia } from '../Materias/materia.entity.js'
 export class Inscripcion extends BaseEntity {
 
   @ManyToOne(() => Alumno)
-  alumno!: Rel<Alumno>;
+  student!: Rel<Alumno>;
   
   @ManyToOne(() => Materia)
-  materia!: Rel<Materia>;
+  course!: Rel<Materia>;
 
   @Property({ type: 'date' })
-  fechaInscripcion: Date | undefined;
+  inscription_date: Date | undefined;
 }

@@ -6,9 +6,9 @@ function sanitizeMateriaInput(req, res, next) {
         name: req.body.name,
         totalhours: req.body.totalhours,
         email: req.body.email,
-        nivel: req.body.nivel,
+        level: req.body.level,
         desc: req.body.desc,
-        icono: req.body.icono,
+        icon: req.body.icon,
     };
     Object.keys(req.body.sanitizedInput).forEach(key => {
         if (req.body.sanitizedInput[key] === undefined) {
@@ -29,6 +29,7 @@ async function findAll(req, res) {
 async function findOne(req, res) {
     try {
         const id = req.params.id;
+        console.log(id);
         const oneMateria = await em.findOneOrFail(Materia, { id });
         res.status(200).json({ message: "materia encontrada", data: oneMateria });
     }
