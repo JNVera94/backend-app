@@ -24,8 +24,8 @@ app.use('/api/user', AuthRouter);
 app.use((_, res) => {
     return res.status(404).send({ message: 'Resource not found' });
 });
-/*await syncSchema()*/
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000/');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}/`);
 });
 //# sourceMappingURL=app.js.map

@@ -1,11 +1,13 @@
 import { MikroORM } from "@mikro-orm/core";
 import { MongoHighlighter } from "@mikro-orm/mongo-highlighter";
+import * as dotenv from 'dotenv';
+dotenv.config();
 export const orm = await MikroORM.init({
     entities: ['dist/**/*.entity.js'],
     entitiesTs: ['src/**/*.entity.ts'],
-    dbName: 'dbMaterias',
+    dbName: process.env.DB_NAME,
     type: 'mongo',
-    clientUrl: 'mongodb://localhost:27017/dbMaterias',
+    clientUrl: process.env.CONNECTION_DB,
     highlighter: new MongoHighlighter(),
     debug: true,
 });
