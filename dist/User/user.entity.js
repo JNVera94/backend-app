@@ -36,6 +36,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
+    Property(),
+    __metadata("design:type", String)
+], User.prototype, "role", void 0);
+__decorate([
     OneToOne(() => Alumno, { nullable: true }),
     __metadata("design:type", Alumno)
 ], User.prototype, "alumno", void 0);

@@ -17,6 +17,9 @@ export class User extends BaseEntity {
   @Property({ hidden: true, length: 60 })
   password!: string;
 
+  @Property()
+  role!: string;
+
   @OneToOne(() => Alumno, { nullable: true })
   alumno?: Alumno;
 

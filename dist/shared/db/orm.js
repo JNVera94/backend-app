@@ -11,4 +11,13 @@ export const orm = await MikroORM.init({
     highlighter: new MongoHighlighter(),
     debug: true,
 });
+export const checkConnection = async () => {
+    try {
+        await orm.isConnected();
+        console.log('Connected to MongoDB successfully.');
+    }
+    catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+    }
+};
 //# sourceMappingURL=orm.js.map

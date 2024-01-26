@@ -19,7 +19,7 @@ export function validarToken(req: Request, res: Response, next: NextFunction) {
     return res.status(401).json({ mensaje: 'Acceso no autorizado, token no proporcionado' });
   }
   const secretJWT: Secret | GetPublicKeyOrSecret = process.env.SECRETJWT || 'defaultSecret';
-  console.log(secretJWT)
+
   jwt.verify(token,secretJWT, (err, decodedToken) => {
     if (err) {
       return res.status(401).json({ mensaje: 'Token no válido' });

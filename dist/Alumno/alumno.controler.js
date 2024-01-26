@@ -29,12 +29,12 @@ async function findAll(req, res) {
 async function findOne(req, res) {
     try {
         const email = req.params.email;
-        const oneAlumno = await em.findOne(Alumno, { email });
+        const oneAlumno = await em.findOneOrFail(Alumno, { email });
         if (oneAlumno) {
-            res.status(200).json({ message: "Alumno encontrado", data: oneAlumno });
+            res.status(200).json({ data: oneAlumno });
         }
         else {
-            res.status(404).json({ message: "Alumno no encontrado", data: null });
+            res.status(200).json({ data: null });
         }
     }
     catch (error) {
@@ -51,14 +51,14 @@ async function findOneId(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-async function checkEmailExists(req, res, next) {
+async function checkEmailExists(req, res) {
     try {
-        const email = req.body.sanitizedInput.email;
+        const email = req.params.email;
         const existingAlumno = await em.findOne(User, { email });
         if (existingAlumno) {
             return res.status(400).json({ message: 'El email ya está registrado', data: null });
         }
-        next();
+        res.status(200).json({ message: 'El email no está registrado', data: null });
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -73,6 +73,7 @@ async function add(req, res) {
         const user = em.create(User, {
             email: req.body.email,
             password: req.body.password,
+            role: 'user',
         });
         await user.hashPassword();
         const alumno = em.create(Alumno, {
@@ -116,5 +117,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { sanitizeAlumnoInput, findAll, findOne, findOneId, checkEmailExists, add, update, remove };
+export { sanitizeAlumnoInput, findAll, findOneId, add, findOne, checkEmailExists, update, remove };
 //# sourceMappingURL=alumno.controler.js.map
