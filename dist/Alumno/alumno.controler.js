@@ -38,6 +38,7 @@ async function findOne(req, res) {
         }
     }
     catch (error) {
+        console.log("entro catch findOne");
         res.status(500).json({ message: error.message });
     }
 }
@@ -55,12 +56,14 @@ async function checkEmailExists(req, res) {
     try {
         const email = req.params.email;
         const existingAlumno = await em.findOne(User, { email });
+        console.log("entro checkEmailExists");
         if (existingAlumno) {
             return res.status(400).json({ message: 'El email ya está registrado', data: null });
         }
         res.status(200).json({ message: 'El email no está registrado', data: null });
     }
     catch (error) {
+        console.log("entro catch checkEmailExists");
         res.status(500).json({ message: error.message });
     }
 }
@@ -84,7 +87,7 @@ async function add(req, res) {
         res.status(201).json({ message: 'alumno creado', data: alumno, user });
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Ocurrio un error, intente nuevamente' });
     }
 }
 async function update(req, res) {

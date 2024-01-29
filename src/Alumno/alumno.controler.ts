@@ -46,6 +46,7 @@ async function findOne(req: Request, res: Response) {
     }
   } 
   catch (error: any) {
+    console.log("entro catch findOne")
     res.status(500).json({ message: error.message });
   }
 }
@@ -68,6 +69,7 @@ async function checkEmailExists(req: Request, res: Response) {
   try {
     const email = req.params.email;
     const existingAlumno = await em.findOne(User, { email });
+    console.log("entro checkEmailExists")
 
     if (existingAlumno) {
       return res.status(400).json({ message: 'El email ya está registrado', data: null });
@@ -76,6 +78,7 @@ async function checkEmailExists(req: Request, res: Response) {
     res.status(200).json({ message: 'El email no está registrado', data: null });
 
   } catch (error: any) {
+    console.log("entro catch checkEmailExists")
     res.status(500).json({ message: error.message });
   }
 }
@@ -106,7 +109,7 @@ async function add(req: Request, res: Response) {
     await em.flush();
     res.status(201).json({ message: 'alumno creado', data: alumno, user });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Ocurrio un error, intente nuevamente' });
   }
 }
 
