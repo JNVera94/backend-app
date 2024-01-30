@@ -20,7 +20,8 @@ export async function authenticate(req: Request, res: Response) {
   }
 
   const token = jwt.sign({ userId: user.id }, 'secreto', { expiresIn: '1h' });
+  const userRole = user.role;
 
   console.log(`User ${user.email} logged in successfully.`);
-  res.json({ token });
+  res.json({ token, userRole  });
 }

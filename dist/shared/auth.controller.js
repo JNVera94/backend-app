@@ -13,7 +13,8 @@ export async function authenticate(req, res) {
         return res.status(401).json({ message: 'Invalid password' });
     }
     const token = jwt.sign({ userId: user.id }, 'secreto', { expiresIn: '1h' });
+    const userRole = user.role;
     console.log(`User ${user.email} logged in successfully.`);
-    res.json({ token });
+    res.json({ token, userRole });
 }
 //# sourceMappingURL=auth.controller.js.map
