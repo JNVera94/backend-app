@@ -81,6 +81,19 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+async function removebyCourseId(course_id, res) {
+    try {
+        const inscriptions = await em.find(Inscripcion, { course: course_id });
+        // Eliminar las inscripciones en paralelo y esperar que todas se completen
+        await Promise.all(inscriptions.map(async (inscription) => {
+            await em.removeAndFlush(inscription);
+        }));
+        return;
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 async function findByStudentId(req, res) {
     try {
         const idStudent = req.params.idStudent;
@@ -91,5 +104,5 @@ async function findByStudentId(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { sanitizeInscripcionInput, findAll, findOne, add, update, remove, findByStudentId };
+export { sanitizeInscripcionInput, findAll, findOne, add, update, remove, findByStudentId, removebyCourseId };
 //# sourceMappingURL=inscripcion.controler.js.map

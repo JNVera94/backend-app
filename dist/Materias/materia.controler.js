@@ -1,5 +1,6 @@
 import { Materia } from './materia.entity.js';
 import { orm } from '../shared/db/orm.js';
+import { removebyCourseId } from '../Inscripciones/inscripcion.controler.js';
 const em = orm.em;
 function sanitizeMateriaInput(req, res, next) {
     req.body.sanitizedInput = {
@@ -64,8 +65,12 @@ async function update(req, res) {
 async function remove(req, res) {
     try {
         const id = req.params.id;
-        const amateria = em.getReference(Materia, id);
-        await em.removeAndFlush(amateria);
+        const materia = await em.findOneOrFail(Materia, id);
+        // Eliminar las inscripciones asociadas
+        await removebyCourseId(id, res);
+        // Eliminar la materia
+        await em.removeAndFlush(materia);
+        res.status(200).json({ message: 'Materia eliminada junto con sus inscripciones asociadas' });
     }
     catch (error) {
         res.status(500).json({ message: error.message });

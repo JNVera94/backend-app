@@ -103,6 +103,21 @@ async function add(req: Request, res: Response) {
     }
   }
 
+  async function removebyCourseId(course_id: string, res: Response) {
+    try {
+      const inscriptions = await em.find(Inscripcion, { course: course_id });
+  
+      // Eliminar las inscripciones en paralelo y esperar que todas se completen
+      await Promise.all(inscriptions.map(async (inscription) => {
+        await em.removeAndFlush(inscription);
+      }));
+  
+      return;
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async function findByStudentId(req: Request, res: Response) {
     try {
       const idStudent = req.params.idStudent;
@@ -114,4 +129,4 @@ async function add(req: Request, res: Response) {
   }
   
 
-export{sanitizeInscripcionInput,findAll,findOne,add,update,remove,findByStudentId}
+export{sanitizeInscripcionInput,findAll,findOne,add,update,remove,findByStudentId,removebyCourseId}

@@ -2,7 +2,8 @@ import {
   Entity,
   Property,
   Collection,
-  OneToMany
+  OneToMany,
+  Cascade
   
 } from '@mikro-orm/core'
 import { BaseEntity } from '../shared/db/baseEntity.js'
@@ -22,7 +23,7 @@ export class Materia extends BaseEntity {
        email!: string
 
        @Property()
-       level!: number
+       level!: string
 
        @Property()
        desc!: string
@@ -30,7 +31,7 @@ export class Materia extends BaseEntity {
        @Property()
        icon!: string
        
-       @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.course)
+       @OneToMany(() => Inscripcion, (inscripcion) => inscripcion.course, { cascade: [Cascade.REMOVE] })
        inscripciones = new Collection<Inscripcion>(this);
 
      }

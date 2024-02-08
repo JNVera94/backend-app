@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Property, Collection, OneToMany } from '@mikro-orm/core';
+import { Entity, Property, Collection, OneToMany, Cascade } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.js';
 import { Inscripcion } from '../Inscripciones/inscripcion.entity.js';
 let Materia = class Materia extends BaseEntity {
@@ -30,7 +30,7 @@ __decorate([
 ], Materia.prototype, "email", void 0);
 __decorate([
     Property(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Materia.prototype, "level", void 0);
 __decorate([
     Property(),
@@ -41,7 +41,7 @@ __decorate([
     __metadata("design:type", String)
 ], Materia.prototype, "icon", void 0);
 __decorate([
-    OneToMany(() => Inscripcion, (inscripcion) => inscripcion.course),
+    OneToMany(() => Inscripcion, (inscripcion) => inscripcion.course, { cascade: [Cascade.REMOVE] }),
     __metadata("design:type", Object)
 ], Materia.prototype, "inscripciones", void 0);
 Materia = __decorate([

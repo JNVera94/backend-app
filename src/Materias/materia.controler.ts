@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { Materia } from './materia.entity.js'
 import { orm } from '../shared/db/orm.js'
+import { removebyCourseId } from '../Inscripciones/inscripcion.controler.js'
 
 const em = orm.em
 
@@ -76,11 +77,18 @@ async function add(req: Request, res: Response) {
 
   async function remove(req: Request, res: Response) {
     try {
-      const id = req.params.id
-      const amateria = em.getReference(Materia, id)
-      await em.removeAndFlush(amateria)
+      const id = req.params.id;
+      const materia = await em.findOneOrFail(Materia, id);
+      
+      // Eliminar las inscripciones asociadas
+      await removebyCourseId(id, res);
+  
+      // Eliminar la materia
+      await em.removeAndFlush(materia);
+  
+      res.status(200).json({ message: 'Materia eliminada junto con sus inscripciones asociadas' });
     } catch (error: any) {
-      res.status(500).json({ message: error.message })
+      res.status(500).json({ message: error.message });
     }
   }
 

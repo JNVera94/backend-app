@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { sanitizeInscripcionInput,findAll, findOne,add,update,remove,findByStudentId } from "./inscripcion.controler.js";
-import { validarToken } from "../middlewares/interceptor.token";
+import { validarToken } from "../middlewares/interceptor.token.js";
 
 export const InscripcionRouter = Router()
 
