@@ -1,42 +1,62 @@
-import 'reflect-metadata'
+import 'reflect-metadata';
 import * as dotenv from 'dotenv';
-
 dotenv.config();
-import  Express from 'express'
+import Express from 'express';
 import { orm } from './shared/db/orm.js';
 import cors from 'cors';
 import { RequestContext } from '@mikro-orm/core';
-
 import { ContactoRouter } from './Contacto/contactoroutes.js';
 import { MateriaRouter } from './Materias/materiasroutes.js';
 import { AlumnoRouter } from './Alumno/alumno.routes.js';
 import { InscripcionRouter } from './Inscripciones/inscripcion.routes.js';
 import { AuthRouter } from './User/user.routes.js';
 
-const app = Express()
-app.use(Express.json())
-app.use(cors())
+class Server {
+  private static instance: Server;
+  private app: Express.Application;
 
-app.use((req,res,next)=>{
-    RequestContext.create(orm.em,next)
-})
+  private constructor() {
+    this.app = Express();
+    this.setup();
+  }
 
+  public static getInstance(): Server {
+    if (!Server.instance) {
+      Server.instance = new Server();
+    }
+    return Server.instance;
+  }
 
+  private setup(): void {
+    this.app.use(Express.json());
+    this.app.use(cors({
+        origin: 'http://localhost:4200'
+      }));
+    this.app.use((req, res, next) => {
+      RequestContext.create(orm.em, next);
+    });
+    this.app.use('/api/contacto', ContactoRouter);
+    this.app.use('/api/alumnos', AlumnoRouter);
+    this.app.use('/api/inscripcion', InscripcionRouter);
+    this.app.use('/api/materia', MateriaRouter);
+    this.app.use('/api/user', AuthRouter);
+    this.app.use((_, res) => {
+      return res.status(404).send({ message: 'Resource not found' });
+    });
+  }
 
-app.use('/api/contacto',ContactoRouter)
-app.use('/api/alumnos',AlumnoRouter)
-app.use('/api/inscripcion',InscripcionRouter)
-app.use('/api/materia',MateriaRouter)
-app.use('/api/user',AuthRouter)
+  public getApp(): Express.Application {
+    return this.app;
+  }
 
-app.use((_,res)=>{
-    return res.status(404).send({message:
-    'Resource not found'})
-})
+  public start(): void {
+    const port = process.env.PORT || 3000;
+    this.app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}/`);
+    });
+  }
+}
+const server = Server.getInstance();
+server.start();
 
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
-})
-
+export default Server.getInstance().getApp();

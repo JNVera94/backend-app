@@ -10,22 +10,45 @@ import { MateriaRouter } from './Materias/materiasroutes.js';
 import { AlumnoRouter } from './Alumno/alumno.routes.js';
 import { InscripcionRouter } from './Inscripciones/inscripcion.routes.js';
 import { AuthRouter } from './User/user.routes.js';
-const app = Express();
-app.use(Express.json());
-app.use(cors());
-app.use((req, res, next) => {
-    RequestContext.create(orm.em, next);
-});
-app.use('/api/contacto', ContactoRouter);
-app.use('/api/alumnos', AlumnoRouter);
-app.use('/api/inscripcion', InscripcionRouter);
-app.use('/api/materia', MateriaRouter);
-app.use('/api/user', AuthRouter);
-app.use((_, res) => {
-    return res.status(404).send({ message: 'Resource not found' });
-});
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
-});
+class Server {
+    constructor() {
+        this.app = Express();
+        this.setup();
+    }
+    static getInstance() {
+        if (!Server.instance) {
+            Server.instance = new Server();
+        }
+        return Server.instance;
+    }
+    setup() {
+        this.app.use(Express.json());
+        this.app.use(cors({
+            origin: 'http://localhost:4200'
+        }));
+        this.app.use((req, res, next) => {
+            RequestContext.create(orm.em, next);
+        });
+        this.app.use('/api/contacto', ContactoRouter);
+        this.app.use('/api/alumnos', AlumnoRouter);
+        this.app.use('/api/inscripcion', InscripcionRouter);
+        this.app.use('/api/materia', MateriaRouter);
+        this.app.use('/api/user', AuthRouter);
+        this.app.use((_, res) => {
+            return res.status(404).send({ message: 'Resource not found' });
+        });
+    }
+    getApp() {
+        return this.app;
+    }
+    start() {
+        const port = process.env.PORT || 3000;
+        this.app.listen(port, () => {
+            console.log(`Server running on http://localhost:${port}/`);
+        });
+    }
+}
+const server = Server.getInstance();
+server.start();
+export default Server.getInstance().getApp();
 //# sourceMappingURL=app.js.map
