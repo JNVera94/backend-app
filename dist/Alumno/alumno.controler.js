@@ -38,7 +38,6 @@ async function findOne(req, res) {
         }
     }
     catch (error) {
-        console.log("entro catch findOne");
         res.status(500).json({ message: error.message });
     }
 }
@@ -109,9 +108,10 @@ async function remove(req, res) {
         const id = req.params.id;
         const aalumno = await em.findOneOrFail(Alumno, { id });
         const email = (await aalumno).email;
-        console.log(email);
+        console.log(email, "email");
         const user = await em.findOneOrFail(User, { email });
-        console.log(aalumno);
+        console.log(user, "user");
+        console.log(aalumno, "aalumno");
         await em.removeAndFlush(aalumno);
         await em.removeAndFlush(user);
         res.status(201).json({ message: 'alumno eliminado', aalumno });

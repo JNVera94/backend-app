@@ -42,11 +42,10 @@ async function findOne(req: Request, res: Response) {
     const oneAlumno = await em.findOneOrFail( Alumno,{ email },);
     if (oneAlumno) {res.status(200).json({data: oneAlumno });
     } 
-    else {res.status(200).json({data: null });
+    else {res.status(400).json({data: null });
     }
   } 
   catch (error: any) {
-    console.log("entro catch findOne")
     res.status(500).json({ message: error.message });
   }
 }
@@ -69,7 +68,7 @@ async function checkEmailExists(req: Request, res: Response) {
   try {
     const email = req.params.email;
     const existingAlumno = await em.findOne(User, { email });
-    console.log("entro checkEmailExists")
+
 
     if (existingAlumno) {
       return res.status(400).json({ message: 'El email ya está registrado', data: null });
@@ -78,7 +77,7 @@ async function checkEmailExists(req: Request, res: Response) {
     res.status(200).json({ message: 'El email no está registrado', data: null });
 
   } catch (error: any) {
-    console.log("entro catch checkEmailExists")
+
     res.status(500).json({ message: error.message });
   }
 }
@@ -133,12 +132,11 @@ async function remove(req: Request, res: Response) {
     const id = req.params.id
     const aalumno = await em.findOneOrFail(Alumno, { id })
     const email = (await aalumno).email
-    console.log(email)
-    const user = await em.findOneOrFail(
+     const user = await em.findOneOrFail(
       User,
       { email },
     )
-    console.log(aalumno)
+
     await em.removeAndFlush(aalumno)
     await em.removeAndFlush(user)
 
