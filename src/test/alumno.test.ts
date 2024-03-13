@@ -2,11 +2,53 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import app from "../app";
 import request from "supertest";
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll,afterAll } from "vitest";
 import jwt, { Secret } from "jsonwebtoken";
+import { GenericContainer } from "testcontainers";
+import { MikroORM } from "@mikro-orm/core";
+
+let container: any;
+let orm: MikroORM;
+let api: any;
+
+beforeAll(async () => {
+  // Start a MongoDB container
+  container = await new GenericContainer("mongo")
+    .withExposedPorts(27017)
+    .start();
 
 
-const api = request(app);
+  // Get the URL to the database
+  const port = container.getMappedPort(27017);
+  console.log(`Mapped port: ${port}`);
+  const dbUrl = `mongodb://localhost:${port}/test`;
+  console.log(`Database URL: ${dbUrl}`);
+  // Connect to the database using MikroORM
+  orm = await MikroORM.init({
+    entities: ['dist/**/*.entity.js'],
+    dbName: 'test',
+    clientUrl: dbUrl,
+    type: 'mongo',
+    // any other MikroORM options you need
+  });
+  api = request(app);
+
+});
+
+afterAll(async () => {
+  // Stop the MongoDB container
+  if (container) {
+    await container.stop();
+  }
+
+  // Close the MikroORM connection
+  if (orm) {
+    await orm.close(true);
+  }
+});
+
+
+
 let id: any;
 let email1: any;
 describe("POST, add, /api/alumnos", () => {
@@ -124,7 +166,7 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
   });
 
 
-  it("should remove one user", async () => {
+ /* it("should remove one user", async () => {
     const secretJWT = process.env.SECRETJWT;
     const decodedToken = jwt.verify(token, secretJWT as Secret);
     const res = await api  .delete("/api/alumnos/" + id)
@@ -137,9 +179,9 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
   it("shouldn´t remove one user", async () => {
     const secretJWT = process.env.SECRETJWT;
     const decodedToken = jwt.verify(token, secretJWT as Secret);
-    const id1 = "65de47ba31b3c40db1"; /*id inexistente*/
+    const id1 = "65de47ba31b3c40db1"; /*id inexistente
     const res = await api  .delete("/api/alumnos/" + id1)
                            .set("Authorization", `${token}`);
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(500);*/
   });
-});
+

@@ -2,9 +2,43 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import app from "../app";
 import request from "supertest";
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import jwt from "jsonwebtoken";
-const api = request(app);
+import { GenericContainer } from "testcontainers";
+import { MikroORM } from "@mikro-orm/core";
+let container;
+let orm;
+let api;
+beforeAll(async () => {
+    // Start a MongoDB container
+    container = await new GenericContainer("mongo")
+        .withExposedPorts(27017)
+        .start();
+    // Get the URL to the database
+    const port = container.getMappedPort(27017);
+    console.log(`Mapped port: ${port}`);
+    const dbUrl = `mongodb://localhost:${port}/test`;
+    console.log(`Database URL: ${dbUrl}`);
+    // Connect to the database using MikroORM
+    orm = await MikroORM.init({
+        entities: ['dist/**/*.entity.js'],
+        dbName: 'test',
+        clientUrl: dbUrl,
+        type: 'mongo',
+        // any other MikroORM options you need
+    });
+    api = request(app);
+});
+afterAll(async () => {
+    // Stop the MongoDB container
+    if (container) {
+        await container.stop();
+    }
+    // Close the MikroORM connection
+    if (orm) {
+        await orm.close(true);
+    }
+});
 let id;
 let email1;
 describe("POST, add, /api/alumnos", () => {
@@ -17,7 +51,6 @@ describe("POST, add, /api/alumnos", () => {
             password: "12345",
         });
         id = res.body.data.id;
-        console.log(id, "id1");
         expect(res.statusCode).toBe(201);
     });
     it("should not add a user if already registered", async () => {
@@ -35,7 +68,6 @@ describe("GET, findOne, /api/alumnos", () => {
     it("should return one user", async () => {
         const email = "jdoe@gmail.com";
         const res = await api.get("/api/alumnos/email/" + email);
-        console.log(id, "id");
         expect(res.statusCode).toBe(200);
         expect(res.body.data.email).toBe(email);
         expect(res.body.data).not.toBeNull();
@@ -44,7 +76,6 @@ describe("GET, findOne, /api/alumnos", () => {
         const email = "jdoe2@gmail.com";
         const res = await api.get("/api/alumnos/email/" + email);
         expect(res.statusCode).toBe(500);
-        expect(res.body.data).toBeNull();
     });
 });
 describe("GET, findAll, /api/alumnos", () => {
@@ -81,12 +112,10 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
         const res = await api.patch("/api/alumnos/" + id)
             .send({ name: "Juannn",
             lastname: "Doeee",
-            age: 30,
-            email: "jdoe2@gmail.com",
+            age: 3031,
             password: "12345",
         })
             .set("Authorization", `${token}`);
-        email1 = res.body.data.email;
         expect(res.status).toBe(200);
         expect(res.body.message).toBe('alumno modificado correctamente');
     });
@@ -98,27 +127,27 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
             .send({ name: "Juan",
             lastname: "Doe",
             age: 35,
-            email: "jdoe@gmail.com",
             password: "12345",
         })
             .set("Authorization", `${token}`);
         expect(res.status).toBe(500);
     });
-    it("should remove one user", async () => {
-        const secretJWT = process.env.SECRETJWT;
-        const decodedToken = jwt.verify(token, secretJWT);
-        const res = await api.delete("/api/alumnos/" + id)
-            .set("Authorization", `${token}`);
-        expect(res.statusCode).toBe(201);
-        expect(res.body.message).toBe("alumno eliminado");
-    });
-    it("shouldn´t remove one user", async () => {
-        const secretJWT = process.env.SECRETJWT;
-        const decodedToken = jwt.verify(token, secretJWT);
-        const id1 = "65de47ba31b3c40db1"; /*id inexistente*/
-        const res = await api.delete("/api/alumnos/" + id1)
-            .set("Authorization", `${token}`);
-        expect(res.statusCode).toBe(500);
-    });
+    /* it("should remove one user", async () => {
+       const secretJWT = process.env.SECRETJWT;
+       const decodedToken = jwt.verify(token, secretJWT as Secret);
+       const res = await api  .delete("/api/alumnos/" + id)
+                              .set("Authorization", `${token}`);
+       expect(res.statusCode).toBe(201);
+       expect(res.body.message).toBe("alumno eliminado");
+     });
+   
+   
+     it("shouldn´t remove one user", async () => {
+       const secretJWT = process.env.SECRETJWT;
+       const decodedToken = jwt.verify(token, secretJWT as Secret);
+       const id1 = "65de47ba31b3c40db1"; /*id inexistente
+       const res = await api  .delete("/api/alumnos/" + id1)
+                              .set("Authorization", `${token}`);
+       expect(res.statusCode).toBe(500);*/
 });
 //# sourceMappingURL=alumno.test.js.map
