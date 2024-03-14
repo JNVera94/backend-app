@@ -2,43 +2,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import app from "../app";
 import request from "supertest";
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import jwt from "jsonwebtoken";
-import { GenericContainer } from "testcontainers";
-import { MikroORM } from "@mikro-orm/core";
-let container;
-let orm;
-let api;
-beforeAll(async () => {
-    // Start a MongoDB container
-    container = await new GenericContainer("mongo")
-        .withExposedPorts(27017)
-        .start();
-    // Get the URL to the database
-    const port = container.getMappedPort(27017);
-    console.log(`Mapped port: ${port}`);
-    const dbUrl = `mongodb://localhost:${port}/test`;
-    console.log(`Database URL: ${dbUrl}`);
-    // Connect to the database using MikroORM
-    orm = await MikroORM.init({
-        entities: ['dist/**/*.entity.js'],
-        dbName: 'test',
-        clientUrl: dbUrl,
-        type: 'mongo',
-        // any other MikroORM options you need
-    });
-    api = request(app);
-});
-afterAll(async () => {
-    // Stop the MongoDB container
-    if (container) {
-        await container.stop();
-    }
-    // Close the MikroORM connection
-    if (orm) {
-        await orm.close(true);
-    }
-});
+const api = request(app);
 let id;
 let email1;
 describe("POST, add, /api/alumnos", () => {
@@ -80,6 +46,11 @@ describe("GET, findOne, /api/alumnos", () => {
 });
 describe("GET, findAll, /api/alumnos", () => {
     it("should return all users", async () => {
+        const res = await api.get("/api/alumnos");
+        expect(res.statusCode).toBe(200);
+        expect(res.body.data).not.toBeNull();
+    });
+    it("shouldn't return all users", async () => {
         const res = await api.get("/api/alumnos");
         expect(res.statusCode).toBe(200);
         expect(res.body.data).not.toBeNull();
@@ -132,22 +103,21 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
             .set("Authorization", `${token}`);
         expect(res.status).toBe(500);
     });
-    /* it("should remove one user", async () => {
-       const secretJWT = process.env.SECRETJWT;
-       const decodedToken = jwt.verify(token, secretJWT as Secret);
-       const res = await api  .delete("/api/alumnos/" + id)
-                              .set("Authorization", `${token}`);
-       expect(res.statusCode).toBe(201);
-       expect(res.body.message).toBe("alumno eliminado");
-     });
-   
-   
-     it("shouldn´t remove one user", async () => {
-       const secretJWT = process.env.SECRETJWT;
-       const decodedToken = jwt.verify(token, secretJWT as Secret);
-       const id1 = "65de47ba31b3c40db1"; /*id inexistente
-       const res = await api  .delete("/api/alumnos/" + id1)
-                              .set("Authorization", `${token}`);
-       expect(res.statusCode).toBe(500);*/
+    it("should remove one user", async () => {
+        const secretJWT = process.env.SECRETJWT;
+        const decodedToken = jwt.verify(token, secretJWT);
+        const res = await api.delete("/api/alumnos/" + id)
+            .set("Authorization", `${token}`);
+        expect(res.statusCode).toBe(201);
+        expect(res.body.message).toBe("alumno eliminado");
+    });
+    it("shouldn´t remove one user", async () => {
+        const secretJWT = process.env.SECRETJWT;
+        const decodedToken = jwt.verify(token, secretJWT);
+        const id1 = "65de47ba31b3c40db1"; /*id inexistente*/
+        const res = await api.delete("/api/alumnos/" + id1)
+            .set("Authorization", `${token}`);
+        expect(res.statusCode).toBe(500);
+    });
 });
 //# sourceMappingURL=alumno.test.js.map

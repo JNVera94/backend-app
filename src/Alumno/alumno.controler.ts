@@ -64,24 +64,6 @@ async function findOneId(req: Request, res: Response) {
   }
 }
 
-async function checkEmailExists(req: Request, res: Response) {
-  try {
-    const email = req.params.email;
-    const existingAlumno = await em.findOne(User, { email });
-
-
-    if (existingAlumno) {
-      return res.status(400).json({ message: 'El email ya está registrado', data: null });
-    }
-
-    res.status(200).json({ message: 'El email no está registrado', data: null });
-
-  } catch (error: any) {
-
-    res.status(500).json({ message: error.message });
-  }
-}
-
 
 async function add(req: Request, res: Response) {
   try {
@@ -146,4 +128,4 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { sanitizeAlumnoInput, findAll, findOneId, add,findOne,checkEmailExists, update, remove }
+export { sanitizeAlumnoInput, findAll, findOneId, add,findOne, update, remove }

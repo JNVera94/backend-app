@@ -6,49 +6,9 @@ import { describe, it, expect, beforeAll,afterAll } from "vitest";
 import jwt, { Secret } from "jsonwebtoken";
 import { GenericContainer } from "testcontainers";
 import { MikroORM } from "@mikro-orm/core";
+import MongoDBContainer from "testcontainers";
 
-let container: any;
-let orm: MikroORM;
-let api: any;
-
-beforeAll(async () => {
-  // Start a MongoDB container
-  container = await new GenericContainer("mongo")
-    .withExposedPorts(27017)
-    .start();
-
-
-  // Get the URL to the database
-  const port = container.getMappedPort(27017);
-  console.log(`Mapped port: ${port}`);
-  const dbUrl = `mongodb://localhost:${port}/test`;
-  console.log(`Database URL: ${dbUrl}`);
-  // Connect to the database using MikroORM
-  orm = await MikroORM.init({
-    entities: ['dist/**/*.entity.js'],
-    dbName: 'test',
-    clientUrl: dbUrl,
-    type: 'mongo',
-    // any other MikroORM options you need
-  });
-  api = request(app);
-
-});
-
-afterAll(async () => {
-  // Stop the MongoDB container
-  if (container) {
-    await container.stop();
-  }
-
-  // Close the MikroORM connection
-  if (orm) {
-    await orm.close(true);
-  }
-});
-
-
-
+const api = request(app);
 let id: any;
 let email1: any;
 describe("POST, add, /api/alumnos", () => {
@@ -62,8 +22,11 @@ describe("POST, add, /api/alumnos", () => {
     });
     id = res.body.data.id;
 
+
     expect(res.statusCode).toBe(201);
   });
+
+
 
 
   it("should not add a user if already registered", async () => {
@@ -77,6 +40,8 @@ describe("POST, add, /api/alumnos", () => {
     expect(res.statusCode).toBe(400);
   });
 });
+
+
 
 
 describe("GET, findOne, /api/alumnos", () => {
@@ -99,6 +64,12 @@ describe("GET, findOne, /api/alumnos", () => {
 
 describe("GET, findAll, /api/alumnos", () => {
   it("should return all users", async () => {
+    const res = await api.get("/api/alumnos");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data).not.toBeNull();
+  });
+
+  it("shouldn't return all users", async () => {
     const res = await api.get("/api/alumnos");
     expect(res.statusCode).toBe(200);
     expect(res.body.data).not.toBeNull();
@@ -136,6 +107,8 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
   });
 
 
+
+
   it("should update one user", async () => {
     const secretJWT = process.env.SECRETJWT;
     const decodedToken = jwt.verify(token, secretJWT as Secret);
@@ -149,6 +122,8 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
     expect(res.status).toBe(200);
     expect(res.body.message).toBe('alumno modificado correctamente');
   });
+
+
 
 
   it("shouldn´t update one user", async () => {
@@ -166,7 +141,9 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
   });
 
 
- /* it("should remove one user", async () => {
+
+
+  it("should remove one user", async () => {
     const secretJWT = process.env.SECRETJWT;
     const decodedToken = jwt.verify(token, secretJWT as Secret);
     const res = await api  .delete("/api/alumnos/" + id)
@@ -176,12 +153,14 @@ describe("PUT-PATCH y DELETE, update-remove, /api/alumnos", () => {
   });
 
 
+
+
   it("shouldn´t remove one user", async () => {
     const secretJWT = process.env.SECRETJWT;
     const decodedToken = jwt.verify(token, secretJWT as Secret);
-    const id1 = "65de47ba31b3c40db1"; /*id inexistente
+    const id1 = "65de47ba31b3c40db1"; /*id inexistente*/
     const res = await api  .delete("/api/alumnos/" + id1)
                            .set("Authorization", `${token}`);
-    expect(res.statusCode).toBe(500);*/
+    expect(res.statusCode).toBe(500);
   });
-
+});
