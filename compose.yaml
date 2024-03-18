@@ -10,26 +10,5 @@ services:
       - .env  
     ports:
       - 4000:3000
-    networks:
-      - mongodb-express
-    depends_on:
-      - db
-  db:
-    image: mongo:latest
-    restart: always
-    volumes:
-      - mongo_data:/data/db
-    environment:
-      - MONGO_INITDB_DATABASE=dbMaterias
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin_password
-    expose:
-      - 27017
-    networks:
-      - mongodb-express
 
-networks:
-  mongodb-express:
-
-volumes:
-  mongo_data:
+ 
