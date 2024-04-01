@@ -30,7 +30,7 @@ class Server {
   private setup(): void {
     this.app.use(Express.json());
     this.app.use(cors({
-        origin: 'http://localhost:4200'
+        origin: 'https://backend-app-8xod.onrender.com'
       }));
     this.app.use((req, res, next) => {
       RequestContext.create(orm.em, next);
