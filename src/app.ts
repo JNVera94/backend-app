@@ -30,7 +30,7 @@ class Server {
   private setup(): void {
     this.app.use(Express.json());
     this.app.use(cors({
-        origin: 'https://backend-app-8xod.onrender.com'
+        origin: 'skillhub-utn.netlify.app'
       }));
     this.app.use((req, res, next) => {
       RequestContext.create(orm.em, next);
