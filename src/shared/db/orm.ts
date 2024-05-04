@@ -7,11 +7,12 @@ dotenv.config();
 let cli: string;
 if (process.env.NODE_ENV === 'production') {
   cli = process.env.CONNECTION_DB as string;
-} else if (process.env.NODE_ENV === 'test') {
+} else if (process.env.NODE_ENV === 'testing') {
   cli = process.env.TEST_CONNECTION_DB as string;
+} else if (process.env.NODE_ENV === 'development') {
+  cli = process.env.DEV_CONNECTION_DB as string;
 } else {
-  throw new Error('Invalid NODE_ENV value');
-}
+  throw new Error('Invalid NODE_ENV value');}
 
 export const orm = await MikroORM.init<MongoDriver>({
     entities: ['dist/**/*.entity.js'],

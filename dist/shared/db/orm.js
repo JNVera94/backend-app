@@ -6,8 +6,11 @@ let cli;
 if (process.env.NODE_ENV === 'production') {
     cli = process.env.CONNECTION_DB;
 }
-else if (process.env.NODE_ENV === 'test') {
+else if (process.env.NODE_ENV === 'testing') {
     cli = process.env.TEST_CONNECTION_DB;
+}
+else if (process.env.NODE_ENV === 'development') {
+    cli = process.env.DEV_CONNECTION_DB;
 }
 else {
     throw new Error('Invalid NODE_ENV value');

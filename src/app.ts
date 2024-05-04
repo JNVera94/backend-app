@@ -30,7 +30,7 @@ class Server {
   private setup(): void {
     this.app.use(Express.json());
     this.app.use(cors({
-        origin: 'https://skillhub-utn.netlify.app'
+      origin: ['http://localhost:4200', 'https://skillhub-utn.netlify.app']
       }));
     this.app.use((req, res, next) => {
       RequestContext.create(orm.em, next);
