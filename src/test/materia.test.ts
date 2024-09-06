@@ -3,16 +3,10 @@ dotenv.config();
 import app from "../app";
 import request from "supertest";
 import { describe, it, expect, beforeAll } from "vitest";
-import jwt, { Secret } from "jsonwebtoken";
-
-
-
 
 const api = request(app);
 let id: any;
 let email1: any;
-
-
 
 
 describe("POST, add, /api/materia", () => {

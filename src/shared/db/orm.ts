@@ -13,16 +13,16 @@ if (process.env.NODE_ENV === 'production') {
   throw new Error('Invalid NODE_ENV value');
 }
 
+
 export const orm = await MikroORM.init<MongoDriver>({
-    entities: ['dist/**/*.entity.js'],
-    entitiesTs: ['src/**/*.entity.ts'],
+  entities: ['dist/**/*.entity.js'],
+  entitiesTs: ['src/**/*.entity.ts'],
     dbName: process.env.DB_NAME,
     type: 'mongo',
     clientUrl: cli,
     highlighter: new MongoHighlighter(),
     debug: true,
-
-})
+});
 
 export const checkConnection = async () => {
     try {
@@ -31,7 +31,7 @@ export const checkConnection = async () => {
     } catch (error) {
       console.error('Error connecting to MongoDB:', error);
     }
-  };
+};
 
 
 

@@ -4,9 +4,7 @@ import app from "../app";
 import request from "supertest";
 import { describe, it, expect, beforeAll,afterAll } from "vitest";
 import jwt, { Secret } from "jsonwebtoken";
-import { GenericContainer } from "testcontainers";
-import { MikroORM } from "@mikro-orm/core";
-import MongoDBContainer from "testcontainers";
+
 
 const api = request(app);
 let id: any;
