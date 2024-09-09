@@ -5,7 +5,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=development tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/app.js\"",
+    "build": "tsc",
+    "start:dev": "cross-env NODE_ENV=production tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/app.js\"",
     "test": "cross-env NODE_ENV=test  && vitest --coverage.enabled=true"
   },
   "keywords": [],
@@ -24,7 +25,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb-memory-server": "^9.1.6",
     "reflect-metadata": "0.1.13",
+    "rimraf": "^6.0.1",
     "supertest": "^6.3.4",
+    "tsx": "^4.19.0",
     "vitest": "^1.6.0"
   },
   "devDependencies": {

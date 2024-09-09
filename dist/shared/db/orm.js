@@ -9,15 +9,12 @@ if (process.env.NODE_ENV === 'production') {
 else if (process.env.NODE_ENV === 'test') {
     cli = process.env.TEST_CONNECTION_DB;
 }
-else if (process.env.NODE_ENV === 'development') {
-    cli = process.env.DEV_CONNECTION_DB;
-}
 else {
     throw new Error('Invalid NODE_ENV value');
 }
-const isDevelopment = process.env.NODE_ENV === 'test';
 export const orm = await MikroORM.init({
-    entities: isDevelopment ? ['src/**/*.entity.ts'] : ['dist/**/*.entity.js'],
+    entities: ['dist/**/*.entity.js'],
+    entitiesTs: ['src/**/*.entity.ts'],
     dbName: process.env.DB_NAME,
     type: 'mongo',
     clientUrl: cli,

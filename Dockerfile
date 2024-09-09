@@ -10,7 +10,6 @@ RUN mkdir -p /usr/src/app/dist && chown -R node:node /usr/src/app/dist
 # Copy package.json and package-lock.json into the image.
 COPY package*.json ./
 
-
 # Download dependencies as a separate step to take advantage of Docker's caching.
 RUN --mount=type=cache,target=/root/.npm \
     npm install 
@@ -21,15 +20,14 @@ ENV NODE_ENV production
 # Copy the rest of the source files into the image.
 COPY . .
 
-# Compile TypeScript files
+# Build the TypeScript files
 RUN npm run build
 
 # Expose the port that the application listens on.
 EXPOSE 3000
 
 # Run the application.
-CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/app.js"]
 
 # Run the application as a non-root user.
 USER node
-

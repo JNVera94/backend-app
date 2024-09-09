@@ -42,7 +42,7 @@ class Server {
         return this.app;
     }
     start() {
-        const port = process.env.PORT || 3000;
+        const port = process.env.NODE_ENV === 'test' ? 0 : (process.env.PORT || 3000);
         this.app.listen(port, () => {
             console.log(`Server running on http://localhost:${port}/`);
         });
