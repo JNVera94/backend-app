@@ -17,11 +17,11 @@ if (process.env.NODE_ENV === 'production') {
 export const orm = await MikroORM.init<MongoDriver>({
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
-    dbName: process.env.DB_NAME,
-    type: 'mongo',
-    clientUrl: cli,
-    highlighter: new MongoHighlighter(),
-    debug: true,
+  dbName: process.env.DB_NAME,
+  type: 'mongo',
+  clientUrl: cli,
+  highlighter: new MongoHighlighter(),
+  debug: true,
 });
 
 export const checkConnection = async () => {

@@ -20,6 +20,9 @@ ENV NODE_ENV production
 # Copy the rest of the source files into the image.
 COPY . .
 
+# Change permissions of all files to ensure node user can access them
+RUN chown -R node:node /usr/src/app && chmod -R 755 /usr/src/app
+
 # Build the TypeScript files
 RUN npm run build
 
@@ -31,3 +34,4 @@ CMD ["node", "dist/app.js"]
 
 # Run the application as a non-root user.
 USER node
+
