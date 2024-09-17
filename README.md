@@ -13,3 +13,6 @@ Run 'npm run start:dev' for a dev server. It will run on http://localhost:3000/.
 
 Run 'npm run test' for testing the application. You can see the coverage on coverage/index.html
 
+## Video Test
+
+https://drive.google.com/file/d/1bC6RC7Jzr1yoaO8wWYO7HNKcqLWK-TJS/view?usp=drive_link
